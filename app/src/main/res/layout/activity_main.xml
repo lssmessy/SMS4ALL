@@ -16,7 +16,8 @@
         android:text="SMS4ALL"
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignLeft="@+id/button"
+        android:layout_alignStart="@+id/button" />
 
     <EditText
         android:layout_width="320dp"
@@ -48,19 +49,21 @@
         android:text="Enter mobile details and message of the person:"
         android:id="@+id/textView2"
         android:layout_below="@+id/editText2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="44dp" />
+        android:layout_marginTop="44dp"
+        android:layout_alignLeft="@+id/editText3"
+        android:layout_alignStart="@+id/editText3" />
 
     <EditText
-        android:layout_width="320dp"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:id="@+id/editText3"
-        android:layout_below="@+id/textView2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="36dp"
         android:maxLength="10"
         android:inputType="number"
-        android:hint="Mobile number"/>
+        android:hint="Mobile number"
+        android:layout_below="@+id/textView2"
+        android:layout_alignLeft="@+id/editText4"
+        android:layout_alignStart="@+id/editText4" />
 
     <EditText
         android:layout_width="320dp"
@@ -69,7 +72,8 @@
         android:hint="Message"
         android:lines="3"
         android:layout_below="@+id/editText3"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        />
 
     <Button
         android:layout_width="200dp"
@@ -79,6 +83,49 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/editText4"
         android:onClick="sendMessage" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change link"
+        android:id="@+id/button2"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/editText"
+        android:layout_alignEnd="@+id/editText"
+        android:onClick="changeLink" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/contactsImage"
+        android:layout_alignBottom="@+id/editText3"
+        android:layout_alignTop="@+id/editText3"
+        android:layout_toRightOf="@+id/editText3"
+        android:src="@drawable/contacts"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/saveButton"
+        android:layout_alignTop="@+id/changeButton"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView"
+        android:onClick="saveDetails" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change"
+        android:id="@+id/changeButton"
+        android:layout_below="@+id/editText2"
+        android:layout_toRightOf="@+id/textView"
+        android:layout_toEndOf="@+id/textView"
+        android:onClick="enableEdittexts"
+        android:enabled="false"/>
+
 
 </RelativeLayout>
 </ScrollView>
