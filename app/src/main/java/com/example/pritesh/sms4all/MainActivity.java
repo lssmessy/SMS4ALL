@@ -14,12 +14,15 @@ import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -101,6 +104,16 @@ public class MainActivity extends ActionBarActivity {
             save.setEnabled(false);
             change.setEnabled(true);
         }
+        message.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId== EditorInfo.IME_ACTION_SEND) {
+                    sendMessage(v);
+                    return true;
+                }
+                return false;
+            }
+        });
         Log.i("myLog","onCreate"+pref);
     }
 
@@ -318,7 +331,7 @@ public class MainActivity extends ActionBarActivity {
     }
     public void changeLink(View view){
 
-        ChangeLinkDialog dialog=new ChangeLinkDialog(this,R.style.Base_Theme_AppCompat_Light);
+        ChangeLinkDialog dialog=new ChangeLinkDialog(this,R.style.Base_V11_Theme_AppCompat);
         dialog.setTitle("Change Link");
         dialog.show();
 

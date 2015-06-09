@@ -74,6 +74,7 @@
         android:lines="3"
         android:layout_below="@+id/editText3"
         android:layout_centerHorizontal="true"
+        android:imeOptions="actionSend"
         />
 
     <Button
