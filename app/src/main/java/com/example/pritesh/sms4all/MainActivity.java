@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -42,61 +43,63 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
-    EditText username,password,mobile,message;
+    EditText username, password, mobile, message;
     String api_url;
-    Button save,change;
-    SharedPreferences link_pref,is_saved;
+    Button save, change;
+    SharedPreferences link_pref, is_saved;
     ImageView contacts;
+    String alertmsg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        link_pref= PreferenceManager.getDefaultSharedPreferences(this);
-        String imgSett = link_pref.getString("api_url","");
-        SharedPreferences.Editor url_link=link_pref.edit();
-        if(imgSett!="") {
+        link_pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String imgSett = link_pref.getString("api_url", "");
+        SharedPreferences.Editor url_link = link_pref.edit();
+        if (imgSett != "") {
             url_link.putString("api_url", imgSett);
-            this.api_url=imgSett;
+            this.api_url = imgSett;
             url_link.apply();
-        }
-        else{
-            String url="http://f680b1e1.ngrok.io/3space_local/apis/curl_text.php";
-            url_link.putString("api_url",url);
-            this.api_url=url;
+        } else {
+            String url = "http://f680b1e1.ngrok.io/3space_local/apis/curl_text.php";
+            url_link.putString("api_url", url);
+            this.api_url = url;
             url_link.apply();
         }
 
-        username=(EditText)findViewById(R.id.editText);
-        password=(EditText)findViewById(R.id.editText2);
-        mobile=(EditText)findViewById(R.id.editText3);
-        message=(EditText)findViewById(R.id.editText4);
-        save=(Button)findViewById(R.id.saveButton);
+        username = (EditText) findViewById(R.id.editText);
+        password = (EditText) findViewById(R.id.editText2);
+        mobile = (EditText) findViewById(R.id.editText3);
+        message = (EditText) findViewById(R.id.editText4);
+        message.setImeActionLabel("SEND", EditorInfo.IME_ACTION_SEND);
+        save = (Button) findViewById(R.id.saveButton);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveDetails(v);
             }
         });
-        change=(Button)findViewById(R.id.changeButton);
+        change = (Button) findViewById(R.id.changeButton);
         change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 enableEdittexts(v);
             }
         });
-        contacts=(ImageView)findViewById(R.id.contactsImage);
+        contacts = (ImageView) findViewById(R.id.contactsImage);
         contacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectContact();
             }
         });
-        is_saved=PreferenceManager.getDefaultSharedPreferences(this);
-        String pref=is_saved.getString("saved","");
-        String uname=is_saved.getString("username","");
-        String pwd=is_saved.getString("password","");
-        if(pref.contains("yes")){
+        is_saved = PreferenceManager.getDefaultSharedPreferences(this);
+        String pref = is_saved.getString("saved", "");
+        String uname = is_saved.getString("username", "");
+        String pwd = is_saved.getString("password", "");
+        if (pref.contains("yes")) {
             username.setText(uname);
             password.setText(pwd);
             username.setEnabled(false);
@@ -107,21 +110,21 @@ public class MainActivity extends ActionBarActivity {
         message.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId== EditorInfo.IME_ACTION_SEND) {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
                     sendMessage(v);
                     return true;
                 }
                 return false;
             }
         });
-        Log.i("myLog","onCreate"+pref);
+        Log.i("myLog", "onCreate" + pref);
     }
 
     private void selectContact() {
-        Log.i("myLog","selectContact");
+        Log.i("myLog", "selectContact");
         mobile.setText("");
-        Intent i=new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-        startActivityForResult(i,1);
+        Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        startActivityForResult(i, 1);
 
     }
 
@@ -130,7 +133,7 @@ public class MainActivity extends ActionBarActivity {
     public void onActivityResult(int reqCode, int resultCode, Intent
             data) {
         super.onActivityResult(reqCode, resultCode, data);
-        Log.i("myLog","onActivityResult");
+        Log.i("myLog", "onActivityResult");
         switch (reqCode) {
             case (1):
                 if (resultCode == Activity.RESULT_OK) {
@@ -150,43 +153,60 @@ public class MainActivity extends ActionBarActivity {
                                     null, null);
                             phones.moveToFirst();
                             String cNumber = phones.getString(phones.getColumnIndex("data1"));
-                            if(cNumber.startsWith("+91")) {
-                                cNumber = cNumber.replace("+91","");
-                                cNumber=cNumber.replace(" ", "");
+                            if (cNumber.startsWith("+91")) {
+                                cNumber = cNumber.replace("+91", "");
+                                cNumber = cNumber.replace(" ", "");
                                 mobile.setText(cNumber);
-                            }
-                            else if(cNumber.startsWith("0")){
+                            } else if (cNumber.startsWith("0")) {
 
-                                cNumber = cNumber.replaceFirst("0","");
-                                cNumber=cNumber.replace(" ", "");
+                                cNumber = cNumber.replaceFirst("0", "");
+                                cNumber = cNumber.replace(" ", "");
 
                                 mobile.setText(cNumber);
                             }
-                            if(cNumber.contains("-")){
+                            if (cNumber.contains("-")) {
 
-                                cNumber=cNumber.replace("-", "");
+                                cNumber = cNumber.replace("-", "");
                                 mobile.setText(cNumber);
                             }
-                            else{
-                                cNumber=cNumber.replace(" ","");
+                            if (cNumber.contains("(")) {
+
+                                cNumber = cNumber.replace("(", "");
                                 mobile.setText(cNumber);
                             }
+                            if (cNumber.contains(")")) {
+
+                                cNumber = cNumber.replace(")", "");
+                                mobile.setText(cNumber);
+                            }
+                            if (cNumber.contains(" ")) {
+                                cNumber = cNumber.replace(" ", "");
+                                mobile.setText(cNumber);
+                            }
+                            if (cNumber.length() > 0 && cNumber.length() < 10) {
+                                Toast.makeText(getBaseContext(), "Contact don't have 10 digit mobile number", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        else {
+                            Toast.makeText(getBaseContext(), "Contact don't have a valid mobile number", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
+
         }
+
     }
 
-    public void sendMessage(View view){
-        Log.i("myLog","sendMessage");
-        if(isAnythingEmpty()==false) {
+
+    public void sendMessage(View view) {
+        Log.i("myLog", "sendMessage");
+        if (isAnythingEmpty() == false) {
             new Login_background().execute();
-        }
-        else {
-            AlertDialog.Builder aleBuilder=new AlertDialog.Builder(this);
+        } else {
+            AlertDialog.Builder aleBuilder = new AlertDialog.Builder(this);
             aleBuilder.setTitle("SMS4ALL says...");
-            aleBuilder.setMessage("All fields are required fields");
-            aleBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            aleBuilder.setMessage(alertmsg);
+            aleBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -194,36 +214,40 @@ public class MainActivity extends ActionBarActivity {
             });
             aleBuilder.show();
         }
-}
+    }
 
     private boolean isAnythingEmpty() {
-        Log.i("myLog","isAnythingEmpty");
-        if(username.getText().toString().trim().length()<=0) {
+        Log.i("myLog", "isAnythingEmpty");
+        if (username.getText().toString().trim().length() <= 0) {
             username.requestFocus();
+            this.alertmsg = "Username can't be blank";
             return true;
-        }
-        else if(password.getText().toString().trim().length()<=0) {
+        } else if (password.getText().toString().trim().length() <= 0) {
             password.requestFocus();
+            this.alertmsg = "Password can't be blank";
             return true;
-        }
-        else if(mobile.getText().toString().trim().length()<=0) {
+        } else if (mobile.getText().toString().trim().length() <= 0) {
             mobile.requestFocus();
+            this.alertmsg = "Mobile number can't be blank";
             return true;
-        }
-        else if(message.getText().toString().trim().length()<=0) {
+        } else if (mobile.getText().toString().trim().length() > 0 && mobile.getText().toString().trim().length() < 10) {
+            mobile.requestFocus();
+            this.alertmsg = "Mobile number must have 10 digits";
+            return true;
+        } else if (message.getText().toString().trim().length() <= 0) {
             message.requestFocus();
+            this.alertmsg = "Message field shouldn't be blank";
             return true;
-        }
-        else
+        } else
             return false;
     }
 
-    private class Login_background extends AsyncTask<Void,Void,Void> {
+    private class Login_background extends AsyncTask<Void, Void, Void> {
 
         ProgressDialog dialog;
-        static final String p="MyLog";
-        boolean res=false;
-        String user="";
+        static final String p = "MyLog";
+        boolean res = false;
+        String user = "";
         String response_message;
 
         @Override
@@ -231,7 +255,7 @@ public class MainActivity extends ActionBarActivity {
 
             super.onPreExecute();
             Log.i("myLog", "onPreExecute");
-            dialog=new ProgressDialog(MainActivity.this);
+            dialog = new ProgressDialog(MainActivity.this);
             dialog.setMessage("Sending SMS...");
             dialog.setTitle("SMS4ALL");
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -244,78 +268,75 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            Log.i("myLog","doInBackground");
-            String uname=username.getText().toString();
-            String pwd=password.getText().toString();
+            Log.i("myLog", "doInBackground");
+            String uname = username.getText().toString();
+            String pwd = password.getText().toString();
 
-            List<NameValuePair> data=new ArrayList<NameValuePair>();
+            List<NameValuePair> data = new ArrayList<NameValuePair>();
 
-            data.add(new BasicNameValuePair("username",uname));
-            data.add(new BasicNameValuePair("password",pwd));
-            data.add(new BasicNameValuePair("mobile",mobile.getText().toString()));
-            data.add(new BasicNameValuePair("message",message.getText().toString()));
+            data.add(new BasicNameValuePair("username", uname));
+            data.add(new BasicNameValuePair("password", pwd));
+            data.add(new BasicNameValuePair("mobile", mobile.getText().toString()));
+            data.add(new BasicNameValuePair("message", message.getText().toString()));
 
 
-            try{
-                HttpClient client=new DefaultHttpClient();
-                HttpPost post=new HttpPost(api_url);
+            try {
+                HttpClient client = new DefaultHttpClient();
+                HttpPost post = new HttpPost(api_url);
                 post.setEntity(new UrlEncodedFormEntity(data));
-                HttpResponse response=client.execute(post);
+                HttpResponse response = client.execute(post);
 
-                if(response!=null){
-                    InputStream is=response.getEntity().getContent();
-                    BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(is));
-                    StringBuilder sb=new StringBuilder();
-                    String line=null;
-                    while((line=bufferedReader.readLine())!=null){
+                if (response != null) {
+                    InputStream is = response.getEntity().getContent();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+                    StringBuilder sb = new StringBuilder();
+                    String line = null;
+                    while ((line = bufferedReader.readLine()) != null) {
 
-                        sb.append(line+"\n");
+                        sb.append(line + "\n");
                     }
                     //this.res=sb.toString();
-                    JSONObject jsonObject=new JSONObject(sb.toString());
+                    JSONObject jsonObject = new JSONObject(sb.toString());
                     jsonObject.get("is_sent");
-                    if(jsonObject.get("is_sent")==true)
-                    {
-                        this.res=true;
-                    }
-                    else
-                        this.res=false;
+                    if (jsonObject.get("is_sent") == true) {
+                        this.res = true;
+                    } else
+                        this.res = false;
 
-                    response_message=jsonObject.get("message").toString();
+                    response_message = jsonObject.get("message").toString();
 
                 }
 
 
-
-
-            }catch (Exception e){e.getMessage();}
+            } catch (Exception e) {
+                e.getMessage();
+            }
 
 
             return null;
         }
 
 
-
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Log.i("myLog","onPostExecute");
+            Log.i("myLog", "onPostExecute");
             dialog.dismiss();
 
-            AlertDialog.Builder aBuilder=new AlertDialog.Builder(MainActivity.this);
+            AlertDialog.Builder aBuilder = new AlertDialog.Builder(MainActivity.this);
             aBuilder.setTitle("Success");
 
-            if(res==true)
+            if (res == true)
                 aBuilder.setMessage(response_message);
-            else if(res==false)
+            else if (res == false)
                 aBuilder.setMessage("Failed to send");
 
-            aBuilder.setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+            aBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     message.setText("");
-                    }
+                }
             });
             aBuilder.show();
 
@@ -325,34 +346,37 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onProgressUpdate(Void... values) {
             super.onProgressUpdate(values);
-            Log.i("myLog","onProgressUpdate");
+            Log.i("myLog", "onProgressUpdate");
             dialog.dismiss();
         }
     }
-    public void changeLink(View view){
 
-        ChangeLinkDialog dialog=new ChangeLinkDialog(this,R.style.Base_V11_Theme_AppCompat);
+    public void changeLink(View view) {
+
+        ChangeLinkDialog dialog = new ChangeLinkDialog(this, R.style.Base_V11_Theme_AppCompat);
         dialog.setTitle("Change Link");
         dialog.show();
 
     }
-    public void saveDetails(View view){
 
-        Log.i("myLog","saveDetails");
+    public void saveDetails(View view) {
 
-            username.setEnabled(false);
-            password.setEnabled(false);
-            save.setEnabled(false);
-            change.setEnabled(true);
-            SharedPreferences.Editor editor = is_saved.edit();
-            editor.putString("saved", "yes");
+        Log.i("myLog", "saveDetails");
+
+        username.setEnabled(false);
+        password.setEnabled(false);
+        save.setEnabled(false);
+        change.setEnabled(true);
+        SharedPreferences.Editor editor = is_saved.edit();
+        editor.putString("saved", "yes");
         editor.putString("username", username.getText().toString());
         editor.putString("password", password.getText().toString());
-            editor.apply();
+        editor.apply();
 
     }
-    public void enableEdittexts(View view){
-        Log.i("myLog","enableEdittexts");
+
+    public void enableEdittexts(View view) {
+        Log.i("myLog", "enableEdittexts");
         username.setEnabled(true);
         password.setEnabled(true);
         username.setFocusable(true);
@@ -365,7 +389,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        Log.i("myLog","onCreateOptionsMenu");
+        Log.i("myLog", "onCreateOptionsMenu");
         return true;
     }
 
@@ -375,7 +399,7 @@ public class MainActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        Log.i("myLog","onOptionsItemSelected");
+        Log.i("myLog", "onOptionsItemSelected");
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
