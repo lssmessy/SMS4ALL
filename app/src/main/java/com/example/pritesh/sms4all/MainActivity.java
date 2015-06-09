@@ -149,6 +149,11 @@ public class MainActivity extends ActionBarActivity {
 
                                 mobile.setText(cNumber);
                             }
+                            if(cNumber.contains("-")){
+
+                                cNumber=cNumber.replace("-", "");
+                                mobile.setText(cNumber);
+                            }
                             else{
                                 cNumber=cNumber.replace(" ","");
                                 mobile.setText(cNumber);
@@ -212,11 +217,12 @@ public class MainActivity extends ActionBarActivity {
         protected void onPreExecute() {
 
             super.onPreExecute();
-            Log.i("myLog","onPreExecute");
+            Log.i("myLog", "onPreExecute");
             dialog=new ProgressDialog(MainActivity.this);
             dialog.setMessage("Sending SMS...");
             dialog.setTitle("SMS4ALL");
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setCanceledOnTouchOutside(false);
             dialog.show();
 
             Log.i(p, "onPreExecute");
@@ -295,6 +301,7 @@ public class MainActivity extends ActionBarActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
+                    message.setText("");
                     }
             });
             aBuilder.show();
@@ -335,6 +342,8 @@ public class MainActivity extends ActionBarActivity {
         Log.i("myLog","enableEdittexts");
         username.setEnabled(true);
         password.setEnabled(true);
+        username.setFocusable(true);
+        password.setFocusable(true);
         save.setEnabled(true);
         change.setEnabled(false);
     }
