@@ -123,6 +123,12 @@ public class MainActivity extends ActionBarActivity {
             }
         });
         Log.i("myLog", "onCreate" + pref);
+        Bundle bun=getIntent().getExtras();
+        if(bun!=null)
+        {
+            mobile.setText(bun.getString("mobile"));
+            message.setText(bun.getString("message"));
+        }
     }
 
     private void selectContact() {
@@ -310,7 +316,7 @@ public class MainActivity extends ActionBarActivity {
                     String status;
                     if (jsonObject.get("is_sent") == true) {
                         this.res = true;
-                        status="Delivered";
+                        status="Sent";
                     } else
                     {
                         this.res = false;

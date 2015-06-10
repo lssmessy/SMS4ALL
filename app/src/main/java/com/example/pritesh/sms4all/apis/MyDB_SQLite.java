@@ -90,7 +90,7 @@ public class MyDB_SQLite extends SQLiteOpenHelper {
     }*/
     public List<Msg_DB> getMessages(){
         List<Msg_DB> msg_dbslist=new ArrayList<>();
-        String query="SELECT * FROM "+TABLE_NAME +";";
+        String query="SELECT * FROM "+TABLE_NAME +" ORDER BY "+COLUMN_TIME+" DESC ;";
         SQLiteDatabase db=getWritableDatabase();
         Cursor c=db.rawQuery(query,null);
 
