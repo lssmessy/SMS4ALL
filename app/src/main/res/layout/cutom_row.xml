@@ -1,28 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <ListView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/listview">
-
-    </ListView>
-
-    <!--<TextView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Mobile"
+        android:text="Mobile:"
         android:id="@+id/textView4"
         android:layout_marginLeft="37dp"
         android:layout_marginStart="37dp"
-        android:layout_marginTop="37dp"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,9 +23,9 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Mobile Number"
         android:id="@+id/mobileText"
-        android:layout_above="@+id/msgTitle"
-        android:layout_alignRight="@+id/timeText"
-        android:layout_alignEnd="@+id/timeText" />
+        android:layout_alignBottom="@+id/textView4"
+        android:layout_alignLeft="@+id/timeText"
+        android:layout_alignStart="@+id/timeText" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -42,7 +35,9 @@
         android:id="@+id/msgTitle"
         android:layout_below="@+id/textView4"
         android:layout_alignLeft="@+id/textView4"
-        android:layout_alignStart="@+id/textView4" />
+        android:layout_alignStart="@+id/textView4"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -50,10 +45,10 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Message Text"
         android:id="@+id/msgText"
-        android:layout_below="@+id/mobileText"
+        android:nestedScrollingEnabled="true"
+        android:layout_alignBottom="@+id/msgTitle"
         android:layout_alignLeft="@+id/mobileText"
-        android:layout_alignStart="@+id/mobileText"
-        android:nestedScrollingEnabled="true"/>
+        android:layout_alignStart="@+id/mobileText" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -63,7 +58,10 @@
         android:id="@+id/timeTitle"
         android:layout_below="@+id/msgTitle"
         android:layout_alignLeft="@+id/msgTitle"
-        android:layout_alignStart="@+id/msgTitle" />
+        android:layout_alignStart="@+id/msgTitle"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"/>
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -72,10 +70,7 @@
         android:text="Time text"
         android:id="@+id/timeText"
         android:layout_alignTop="@+id/timeTitle"
-        android:layout_toRightOf="@+id/msgTitle"
-        android:layout_toEndOf="@+id/msgTitle"
-        android:layout_marginLeft="69dp"
-        android:layout_marginStart="69dp" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -85,7 +80,9 @@
         android:id="@+id/statusTitle"
         android:layout_below="@+id/timeTitle"
         android:layout_alignLeft="@+id/timeTitle"
-        android:layout_alignStart="@+id/timeTitle" />
+        android:layout_alignStart="@+id/timeTitle"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
 
 
     <TextView
@@ -94,10 +91,21 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Status"
         android:id="@+id/statusText"
+
         android:layout_alignBottom="@+id/statusTitle"
-        android:layout_alignRight="@+id/timeText"
-        android:layout_alignEnd="@+id/timeText" />
-    <View
+        android:layout_alignLeft="@+id/timeText"
+        android:layout_alignStart="@+id/timeText" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:id="@+id/deleteButton"
+        android:layout_below="@+id/statusTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:onClick="deleteMessage" />
+    <!--<View
         android:id="@+id/SplitLine_hor1"
         android:layout_below="@+id/statusText"
         android:layout_width="fill_parent"

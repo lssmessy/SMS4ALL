@@ -9,6 +9,9 @@ import android.util.Log;
 
 import com.example.pritesh.sms4all.Msg_DB;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by PRITESH on 09-06-2015.
  */
@@ -55,26 +58,55 @@ public class MyDB_SQLite extends SQLiteOpenHelper {
         db.close();
         Log.i("myLog","Data inserted");
     }
-    public void deleteData(String message_id){
+    public void deleteData(String message_time){
         SQLiteDatabase db=getWritableDatabase();
-        db.execSQL("DELETE FROM "+TABLE_NAME+" WHERE "+COLUMN_ID+"= '"+message_id+"' ;");
+        db.execSQL("DELETE FROM "+TABLE_NAME+" WHERE "+COLUMN_TIME+"= '"+message_time+"' ;");
         db.close();
         Log.i("myLog","Data deleted");
     }
-    public String databaseToString(){
+    /*public String databaseToString(){
         String dbString="";
+
         SQLiteDatabase db=getWritableDatabase();
         String query="SELECT * FROM "+TABLE_NAME;
         Cursor c=db.rawQuery(query,null);
-        //c.moveToFirst();
+        c.moveToFirst();
         while (!c.isAfterLast()){
             if(c.getString(c.getColumnIndex("message"))!=null && c.getString(c.getColumnIndex("time"))!=null){
-                dbString+=c.getString(c.getColumnIndex("message"))+" time:"+c.getString(c.getColumnIndex("time"));
-                dbString+="--------\n";
+                dbString+="Mobile:"+c.getString(c.getColumnIndex("mobile"))+" Message:"
+                        +c.getString(c.getColumnIndex("message"))+" Time: "
+                        +c.getString(c.getColumnIndex("time"))
+                        +" Status:"+c.getString(c.getColumnIndex("status"));
+                dbString+="\n--------\n";
+
             }
+
+            c.moveToNext();
+            return dbString;
 
         }
         db.close();
         return dbString;
+    }*/
+    public List<Msg_DB> getMessages(){
+        List<Msg_DB> msg_dbslist=new ArrayList<>();
+        String query="SELECT * FROM "+TABLE_NAME +";";
+        SQLiteDatabase db=getWritableDatabase();
+        Cursor c=db.rawQuery(query,null);
+
+        if(c.moveToFirst()){
+            do{
+                Msg_DB data=new Msg_DB();
+                //data.set_id(Integer.parseInt(c.getString(c.getColumnIndex("id"))));
+                data.set_mobile(c.getString(c.getColumnIndex("mobile")));
+                data.set_message(c.getString(2));
+                data.set_time(c.getString(3));
+                data.set_status(c.getString(4));
+
+                msg_dbslist.add(data);
+
+            }while (c.moveToNext());
+        }
+        return msg_dbslist;
     }
 }
