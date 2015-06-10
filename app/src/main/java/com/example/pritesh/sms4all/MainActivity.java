@@ -25,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pritesh.sms4all.apis.MyDB_SQLite;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -38,6 +40,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -49,6 +52,7 @@ public class MainActivity extends ActionBarActivity {
     SharedPreferences link_pref, is_saved;
     ImageView contacts;
     String alertmsg;
+    MyDB_SQLite myDB_sqLite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +77,7 @@ public class MainActivity extends ActionBarActivity {
         password = (EditText) findViewById(R.id.editText2);
         mobile = (EditText) findViewById(R.id.editText3);
         message = (EditText) findViewById(R.id.editText4);
+        myDB_sqLite=new MyDB_SQLite(this,null,null,1);
         message.setImeActionLabel("SEND", EditorInfo.IME_ACTION_SEND);
         save = (Button) findViewById(R.id.saveButton);
         save.setOnClickListener(new View.OnClickListener() {
@@ -186,6 +191,9 @@ public class MainActivity extends ActionBarActivity {
                             if (cNumber.length() > 0 && cNumber.length() < 10) {
                                 Toast.makeText(getBaseContext(), "Contact don't have 10 digit mobile number", Toast.LENGTH_SHORT).show();
                             }
+                            else{
+                                mobile.setText(cNumber);
+                            }
                         }
                         else {
                             Toast.makeText(getBaseContext(), "Contact don't have a valid mobile number", Toast.LENGTH_SHORT).show();
@@ -202,6 +210,7 @@ public class MainActivity extends ActionBarActivity {
         Log.i("myLog", "sendMessage");
         if (isAnythingEmpty() == false) {
             new Login_background().execute();
+
         } else {
             AlertDialog.Builder aleBuilder = new AlertDialog.Builder(this);
             aleBuilder.setTitle("SMS4ALL says...");
@@ -298,12 +307,23 @@ public class MainActivity extends ActionBarActivity {
                     //this.res=sb.toString();
                     JSONObject jsonObject = new JSONObject(sb.toString());
                     jsonObject.get("is_sent");
+                    String status;
                     if (jsonObject.get("is_sent") == true) {
                         this.res = true;
+                        status="Delivered";
                     } else
+                    {
                         this.res = false;
+                        status="Failed";
+                    }
 
                     response_message = jsonObject.get("message").toString();
+                    Calendar c=Calendar.getInstance();
+
+                    String time=c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND);
+                    Msg_DB msg_db=new Msg_DB(mobile.getText().toString(),message.getText().toString(),time,status);
+                    myDB_sqLite.addData(msg_db);
+
 
                 }
 
@@ -349,6 +369,13 @@ public class MainActivity extends ActionBarActivity {
             Log.i("myLog", "onProgressUpdate");
             dialog.dismiss();
         }
+    }
+
+    public void showSentSMS(View view){
+        Intent i=new Intent(this,Sent_SMS.class);
+        startActivity(i);
+
+
     }
 
     public void changeLink(View view) {

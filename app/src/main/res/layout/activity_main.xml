@@ -20,8 +20,10 @@
             android:text="SMS4ALL"
             android:id="@+id/textView"
             android:layout_alignParentTop="true"
-            android:layout_alignLeft="@+id/button"
-            android:layout_alignStart="@+id/button" />
+            android:layout_toLeftOf="@+id/button2"
+            android:layout_toStartOf="@+id/button2"
+            android:layout_marginRight="19dp"
+            android:layout_marginEnd="19dp" />
 
         <EditText
             android:layout_width="320dp"
@@ -130,6 +132,19 @@
             android:layout_toEndOf="@+id/textView"
             android:onClick="enableEdittexts"
             android:enabled="false" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sent SMS"
+            android:id="@+id/sentSMSButon"
+            android:layout_alignBottom="@+id/button2"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/button"
+            android:layout_toStartOf="@+id/button"
+            android:onClick="showSentSMS" />
 
 
     </RelativeLayout>
