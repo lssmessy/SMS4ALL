@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -39,6 +41,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -58,7 +61,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#F44336"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
         link_pref = PreferenceManager.getDefaultSharedPreferences(this);
         String imgSett = link_pref.getString("api_url", "");
         SharedPreferences.Editor url_link = link_pref.edit();
@@ -325,9 +329,14 @@ public class MainActivity extends ActionBarActivity {
 
                     response_message = jsonObject.get("message").toString();
                     Calendar c=Calendar.getInstance();
+                    SimpleDateFormat sd=new SimpleDateFormat("dd-MM-yy");
+                    String dat=sd.format(c.getTime());
+                    String hour= String.valueOf(c.get(Calendar.HOUR_OF_DAY)<10 ? "0"+c.get(Calendar.HOUR_OF_DAY) : c.get(Calendar.HOUR_OF_DAY));
+                    String mins= String.valueOf(c.get(Calendar.MINUTE)<10 ? "0"+c.get(Calendar.MINUTE) : c.get(Calendar.MINUTE));
+                    String seconds= String.valueOf(c.get(Calendar.SECOND)<10 ? "0"+c.get(Calendar.SECOND) : c.get(Calendar.SECOND));
 
-                    String time=c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND);
-                    Msg_DB msg_db=new Msg_DB(mobile.getText().toString(),message.getText().toString(),time,status);
+                    String time=hour+":"+mins+":"+seconds+ " "+dat;
+                    Msg_DB msg_db=new Msg_DB(username.getText().toString(),mobile.getText().toString(),message.getText().toString(),time,status);
                     myDB_sqLite.addData(msg_db);
 
 
@@ -382,6 +391,7 @@ public class MainActivity extends ActionBarActivity {
         startActivity(i);
 
 
+
     }
 
     public void changeLink(View view) {
@@ -393,18 +403,52 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void saveDetails(View view) {
+        if(isEmptyUser()){
+                AlertDialog.Builder aleBuilder = new AlertDialog.Builder(this);
+                aleBuilder.setTitle("SMS4ALL says...");
+                aleBuilder.setMessage(alertmsg);
+                aleBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                aleBuilder.show();
 
-        Log.i("myLog", "saveDetails");
+        }
 
-        username.setEnabled(false);
-        password.setEnabled(false);
-        save.setEnabled(false);
-        change.setEnabled(true);
-        SharedPreferences.Editor editor = is_saved.edit();
-        editor.putString("saved", "yes");
-        editor.putString("username", username.getText().toString());
-        editor.putString("password", password.getText().toString());
-        editor.apply();
+
+        else{
+            username.setEnabled(false);
+            password.setEnabled(false);
+            save.setEnabled(false);
+            change.setEnabled(true);
+            SharedPreferences.Editor editor = is_saved.edit();
+            editor.putString("saved", "yes");
+            editor.putString("username", username.getText().toString());
+            editor.putString("password", password.getText().toString());
+            editor.apply();
+            Log.i("myLog", "saveDetails");
+        }
+    }
+
+    private boolean isEmptyUser() {
+        if (username.getText().toString().trim().length() <= 0) {
+            username.requestFocus();
+            this.alertmsg = "Username can't be blank";
+            return true;
+        }
+        if (username.getText().toString().trim().length() > 0 && username.getText().toString().trim().length() < 10) {
+            username.requestFocus();
+            this.alertmsg = "Username must have 10 digits";
+            return true;
+        }
+        else if (password.getText().toString().trim().length() <= 0) {
+            password.requestFocus();
+            this.alertmsg = "Password can't be blank";
+            return true;
+        }
+        else return false;
 
     }
 

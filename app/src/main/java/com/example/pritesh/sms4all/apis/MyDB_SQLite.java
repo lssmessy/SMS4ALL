@@ -20,6 +20,7 @@ public class MyDB_SQLite extends SQLiteOpenHelper {
     private static final String DATABASE_NAME="user_data.db";
     private static final String TABLE_NAME="users";
     public static final String COLUMN_ID="_id";
+    public static final String COLUMN_USERNAME="username";
     public static final String COLUMN_MOBILE="mobile";
     public static final String COLUMN_MESSAGE="message";
     public static final String COLUMN_TIME="time";
@@ -33,6 +34,7 @@ public class MyDB_SQLite extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
     String query="CREATE TABLE "+TABLE_NAME+" ("+
             COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT ,"+
+            COLUMN_USERNAME+" TEXT ,"+
             COLUMN_MOBILE+" TEXT ,"+
             COLUMN_MESSAGE+" TEXT ,"+
             COLUMN_TIME+" TEXT ,"+
@@ -49,6 +51,7 @@ public class MyDB_SQLite extends SQLiteOpenHelper {
     }
     public void addData(Msg_DB msg_db){
         ContentValues values=new ContentValues();
+        values.put(COLUMN_USERNAME,msg_db.get_username());
         values.put(COLUMN_MOBILE,msg_db.get_mobile());
         values.put(COLUMN_MESSAGE,msg_db.get_message());
         values.put(COLUMN_TIME,msg_db.get_time());
@@ -88,9 +91,10 @@ public class MyDB_SQLite extends SQLiteOpenHelper {
         db.close();
         return dbString;
     }*/
-    public List<Msg_DB> getMessages(){
+    public List<Msg_DB> getMessages(String username){
+
         List<Msg_DB> msg_dbslist=new ArrayList<>();
-        String query="SELECT * FROM "+TABLE_NAME +" ORDER BY "+COLUMN_TIME+" DESC ;";
+        String query="SELECT * FROM "+TABLE_NAME +" WHERE "+COLUMN_USERNAME+"='"+username+"' ORDER BY "+COLUMN_ID+" DESC ;";//
         SQLiteDatabase db=getWritableDatabase();
         Cursor c=db.rawQuery(query,null);
 
@@ -98,10 +102,11 @@ public class MyDB_SQLite extends SQLiteOpenHelper {
             do{
                 Msg_DB data=new Msg_DB();
                 //data.set_id(Integer.parseInt(c.getString(c.getColumnIndex("id"))));
+                data.set_mobile(c.getString(c.getColumnIndex("username")));
                 data.set_mobile(c.getString(c.getColumnIndex("mobile")));
-                data.set_message(c.getString(2));
-                data.set_time(c.getString(3));
-                data.set_status(c.getString(4));
+                data.set_message(c.getString(c.getColumnIndex("message")));
+                data.set_time(c.getString(c.getColumnIndex("time")));
+                data.set_status(c.getString(c.getColumnIndex("status")));
 
                 msg_dbslist.add(data);
 

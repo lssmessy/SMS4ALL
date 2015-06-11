@@ -22,7 +22,10 @@
         </activity>
         <activity
             android:name=".Sent_SMS"
-            android:label="Sent sms" >
+            android:label="Sent sms">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
 
         </activity>
 

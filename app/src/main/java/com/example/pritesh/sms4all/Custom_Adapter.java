@@ -1,5 +1,6 @@
 package com.example.pritesh.sms4all;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.pritesh.sms4all.apis.MyDB_SQLite;
 
@@ -51,7 +53,7 @@ public class Custom_Adapter extends ArrayAdapter<Msg_DB> {
             status.setTextColor(Color.RED);
             status.setText(msgob.get_status());
         } else if (msgob.get_status().contains("Sent")) {
-            status.setTextColor(Color.parseColor("#009933"));
+            status.setTextColor(Color.parseColor("#00FF00"));
             status.setText(msgob.get_status());
         }
 
@@ -68,6 +70,7 @@ public class Custom_Adapter extends ArrayAdapter<Msg_DB> {
                     public void onClick(DialogInterface dialog, int which) {
                         myDB_sqLite.deleteData(msgob.get_time());
                         remove(msgob);
+                        Toast.makeText(mycontext,"One message has been successfully deleted!",Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -86,11 +89,14 @@ public class Custom_Adapter extends ArrayAdapter<Msg_DB> {
             @Override
             public void onClick(View v) {
 
+
                 Intent i = new Intent(mycontext, MainActivity.class);
 
                 i.putExtra("mobile", msgob.get_mobile());
                 i.putExtra("message", msgob.get_message());
                 mycontext.startActivity(i);
+                ((Activity)mycontext).finish();
+
 
             }
         });
