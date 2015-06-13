@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class Custom_Adapter extends ArrayAdapter<Msg_DB> {
         final Msg_DB msgob = getItem(position);
         mobile = (TextView) myview.findViewById(R.id.mobileText);
         message = (TextView) myview.findViewById(R.id.msgText);
+        message.setMovementMethod(new ScrollingMovementMethod());
         time = (TextView) myview.findViewById(R.id.timeText);
         status = (TextView) myview.findViewById(R.id.statusText);
         delete = (Button) myview.findViewById(R.id.deleteButton);

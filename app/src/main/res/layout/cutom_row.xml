@@ -31,11 +31,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Message:"
         android:id="@+id/msgTitle"
-        android:layout_marginTop="27dp"
-        android:layout_below="@+id/mobileText"
+        android:paddingLeft="10dp"
+        android:layout_below="@+id/textView4"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:paddingLeft="10dp" />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -43,17 +42,16 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Message Text"
         android:id="@+id/msgText"
-        android:nestedScrollingEnabled="true"
-        android:ellipsize="end"
-        android:maxHeight="15dp"
-        android:maxLines="4"
-        android:lines="4"
-        android:layout_alignLeft="@+id/mobileText"
-        android:layout_alignStart="@+id/mobileText"
-        android:layout_alignTop="@+id/msgTitle"
+
+
+        android:scrollbars="vertical"
+        android:layout_above="@+id/timeText"
+        android:layout_alignLeft="@+id/timeText"
+        android:layout_alignStart="@+id/timeText"
+        android:paddingTop="5dp"
+        android:layout_below="@+id/mobileText"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@+id/timeText" />
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -61,12 +59,11 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Time:"
         android:id="@+id/timeTitle"
+        android:layout_marginTop="40dp"
+        android:paddingLeft="10dp"
         android:layout_below="@+id/msgTitle"
-        android:layout_alignLeft="@+id/msgTitle"
-        android:layout_alignStart="@+id/msgTitle"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
-        android:paddingLeft="10dp" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 
     <TextView
@@ -75,7 +72,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Time text"
         android:id="@+id/timeText"
-        android:layout_alignTop="@+id/timeTitle"
+        android:layout_above="@+id/statusTitle"
         android:layout_alignLeft="@+id/statusText"
         android:layout_alignStart="@+id/statusText" />
 
