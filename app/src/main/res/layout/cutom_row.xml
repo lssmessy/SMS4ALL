@@ -21,6 +21,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Mobile Number"
         android:id="@+id/mobileText"
+        android:autoLink="phone"
         android:layout_alignBottom="@+id/textView4"
         android:layout_alignLeft="@+id/timeText"
         android:layout_alignStart="@+id/timeText" />
